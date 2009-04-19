@@ -19,8 +19,8 @@ class FlexibleCsv
   # <b>Returns:</b> Parser object
   #
   # <em>Syntax: @parser = @flexible_csv.parse(File.open('path/to/file.csv'))</em>
-  def parse(data)
-    Parser.new(data, self)
+  def parse(data, fcsv_options = {})
+    Parser.new(data, self, fcsv_options)
   end
   
   # Developed by Chris Powers, Killswitch Collective on 02/17/2009
@@ -53,10 +53,12 @@ class FlexibleCsv
   # Wrapper class around the FasterCSV object
   class Parser
     
-    def initialize(data, csv_parent)
+    def initialize(data, csv_parent, fcsv_options = {})
       column_headers = []
       
-      fcsv = FasterCSV.new(data.is_a?(String) ? data : data.read, :headers => true)
+      fcsv_options[:headers] = true
+      
+      fcsv = FasterCSV.new(data.is_a?(String) ? data : data.read, fcsv_options)
 
       # reformat headers to remove punctuation, capitalization and white space
       # Change header labels to the key used in the column config
